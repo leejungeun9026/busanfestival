@@ -9,7 +9,6 @@ from festival.models import FestivalRaw, FestivalSyncLog
 from festival.utils.hash_utils import _make_payload_hash
 from festival.utils.raw_snapshot_utils import save_public_festival_snapshot_json
 
-
 # 공공데이터 API URL
 API_URL = "http://apis.data.go.kr/6260000/FestivalService/getFestivalKr"
 
@@ -49,7 +48,7 @@ def _fetch_page(page_no: int, num_of_rows: int) -> Tuple[List[Dict[str, Any]], i
 	service_key = getattr(settings, "PUBLIC_DATA_SERVICE_KEY", "")
 	if not service_key:
 		raise RuntimeError("PUBLIC_DATA_SERVICE_KEY가 설정되어 있지 않아요.")
-	
+
 	# API 요청 파라미터 구성
 	params = {
 		"serviceKey": service_key,
@@ -79,9 +78,9 @@ def _fetch_page(page_no: int, num_of_rows: int) -> Tuple[List[Dict[str, Any]], i
 	# totalCount는 표준 응답이면 body.totalCount에 있을 수 있어서 둘 다 시도
 	total_count_raw = (root.get("totalCount")
 										 	or (root.get("body")
-											or {}).get("totalCount") 
+											or {}).get("totalCount")
 											or len(items))
-	
+
 	try:
 			total_count = int(total_count_raw)
 	except (TypeError, ValueError):
@@ -96,13 +95,13 @@ def run_public_festival_sync(sync_log: FestivalSyncLog, page_size: int = 100) ->
 
 	# 요청 시작 시간
 	started_at = timezone.now()
-	
+
 	# sync_log 초기 상태인  RUNNING(동기화 진행 중) 저장
 	sync_log.started_at = started_at
 	sync_log.status = FestivalSyncLog.Status.RUNNING
 	sync_log.request_rows = page_size
 	sync_log.save(update_fields=["started_at", "status", "request_rows"])
-	
+
 	# 통계 카운터
 	insert_count = 0
 	update_count = 0
@@ -132,7 +131,7 @@ def run_public_festival_sync(sync_log: FestivalSyncLog, page_size: int = 100) ->
 
 			# DB 저장 작업
 			# 아래 작업을 transaction으로 처리
-			with transaction.atomic():				
+			with transaction.atomic():
 				for item in items:
 					# 고유 아이디 가져오기
 					uc_seq = item.get("UC_SEQ")
@@ -142,9 +141,9 @@ def run_public_festival_sync(sync_log: FestivalSyncLog, page_size: int = 100) ->
 						continue
 
 					external_id = str(uc_seq).strip()
-					
+
 					# CORE_FIELDS만 정규화해서 해시 생성
-					payload_hash = _make_payload_hash(item, CORE_FIELDS)	
+					payload_hash = _make_payload_hash(item, CORE_FIELDS)
 
 					# festival_raw에서 중복/갱신 판단을 위한 조회 조건
 					lookup = { "external_source": sync_log.external_source,  "external_id": external_id,}
@@ -162,7 +161,7 @@ def run_public_festival_sync(sync_log: FestivalSyncLog, page_size: int = 100) ->
 							last_synced_at=timezone.now(),
 						)
 						insert_count += 1
-					
+
 					# 기존 데이터라면 update or skip
 					else:
 						# 저장된 해시와 신규 해시 비교
@@ -177,7 +176,7 @@ def run_public_festival_sync(sync_log: FestivalSyncLog, page_size: int = 100) ->
 						obj.save(update_fields=["payload", "payload_hash", "fetched_sync", "last_synced_at", "updated_at"])
 						update_count += 1
 			page_no += 1	# 다음 페이지 이동
-		
+
 
 		# 원본 JSON파일 저장
 		raw_path, raw_size, raw_checksum = save_public_festival_snapshot_json(

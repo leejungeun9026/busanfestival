@@ -15,27 +15,29 @@ class FestivalSyncLog(models.Model):
     FAIL = "FAIL", "전체 실패"
 
   external_source = models.CharField(max_length=50, default="PUBLIC_API") # 데이터 출처
+
+  # sync결과 : 공공데이터 -> festival_raw
   sync_type = models.CharField(max_length=20, choices=SyncType.choices, default=SyncType.BATCH)
   status = models.CharField(max_length=20, choices=Status.choices, default=Status.RUNNING)
-
-  started_at = models.DateTimeField(default=timezone.now)
-  finished_at = models.DateTimeField(null=True, blank=True)
-
-  result_code = models.CharField(max_length=20, null=True, blank=True)
-  result_msg = models.CharField(max_length=255, null=True, blank=True)
-  request_rows = models.IntegerField(null=True, blank=True)
-
   total_count = models.IntegerField(null=True, blank=True)
   insert_count = models.IntegerField(default=0)
   update_count = models.IntegerField(default=0)
   skip_count = models.IntegerField(default=0)
   error_count = models.IntegerField(default=0)
 
+  started_at = models.DateTimeField(default=timezone.now)
+  finished_at = models.DateTimeField(null=True, blank=True)
+
+  # 공공데이터 응답 코드&메세지
+  result_code = models.CharField(max_length=20, null=True, blank=True)
+  result_msg = models.CharField(max_length=255, null=True, blank=True)
+  request_rows = models.IntegerField(null=True, blank=True)
+
   triggered_by = models.CharField(max_length=100, default="system")  # admin_id or system
   note = models.TextField(null=True, blank=True)
   raw_file_path = models.CharField(
-    max_length=500, 
-    null=True, 
+    max_length=500,
+    null=True,
     blank=True,
     help_text="원본 공공데이터 JSON 파일 경로(static 하위 상대경로)"
     )
@@ -46,10 +48,23 @@ class FestivalSyncLog(models.Model):
   )
   raw_file_checksum = models.CharField(max_length=64, null=True, blank=True)
 
+
+  # apply결과 : festival_raw -> festival
+  apply_status = models.CharField(
+    max_length=20,
+    choices=[("RUNNING","RUNNING"), ("SUCCESS","SUCCESS"), ("FAIL","FAIL")],
+    null=True, blank=True
+  )
+  apply_insert_count = models.IntegerField(null=True, blank=True)
+  apply_update_count = models.IntegerField(null=True, blank=True)
+  apply_skip_count = models.IntegerField(null=True, blank=True)
+  apply_error_count = models.IntegerField(null=True, blank=True)
+  applied_at = models.DateTimeField(null=True, blank=True)
+
   class Meta:
     db_table = "festival_sync_log"
     verbose_name = "축제 데이터 동기화 로그"
-    verbose_name_plural = "축제 데이터 동기화 로그 목록"
+    verbose_name_plural = "축제 데이터 동기화 로그"
     ordering = ("-started_at",)
 
   def __str__(self) -> str:
@@ -136,15 +151,17 @@ class Festival(models.Model):
   item_contents = models.TextField(null=True, blank=True)
   middle_size_rm1 = models.CharField(max_length=500, null=True, blank=True)
 
+  payload_hash = models.CharField(max_length=64, null=True, blank=True, db_index=True)
+
   # 운영에서 정규화 시킬 일정 필드
   start_date = models.DateField(null=True, blank=True)
   end_date = models.DateField(null=True, blank=True)
   date_precision = models.CharField(
-    max_length=20, 
-    choices=DatePrecision.choices, 
+    max_length=20,
+    choices=DatePrecision.choices,
     default=DatePrecision.UNKNOWN
   )
-  extra_schedule_note = models.CharField(max_length=500, null=True, blank=True)
+  extra_schedule_note = models.TextField(null=True, blank=True)
   time_info_raw = models.CharField(max_length=500, null=True, blank=True)
 
   # 운영 관리용 필드
