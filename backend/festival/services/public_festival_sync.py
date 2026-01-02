@@ -41,6 +41,11 @@ CORE_FIELDS = [
 ]
 
 
+# 원문에서 main_title 추출
+def _extract_main_title(item: Dict[str, Any]) -> str:
+    return str(item.get("MAIN_TITLE", "")).strip()
+
+
 # 공공데이터 API 호출 함수 생성
 def _fetch_page(page_no: int, num_of_rows: int) -> Tuple[List[Dict[str, Any]], int, str, str]:
 
@@ -151,10 +156,13 @@ def run_public_festival_sync(sync_log: FestivalSyncLog, page_size: int = 100) ->
 					# 기존에 동일한 축제가 저장되어 있는지 확인
 					obj = FestivalRaw.objects.filter(**lookup).first()
 
+					main_title = _extract_main_title(item)
+
 					# 신규 데이터라면 insert
 					if obj is None:
 						FestivalRaw.objects.create(
 							**lookup,
+							main_title=main_title,
 							payload=item,
 							payload_hash=payload_hash,
 							fetched_sync=sync_log,
@@ -169,6 +177,7 @@ def run_public_festival_sync(sync_log: FestivalSyncLog, page_size: int = 100) ->
 							skip_count += 1
 							continue
 						# 변경된 내용있으면 최신값 저장
+						obj.main_title=main_title,
 						obj.payload = item
 						obj.payload_hash = payload_hash
 						obj.fetched_sync = sync_log

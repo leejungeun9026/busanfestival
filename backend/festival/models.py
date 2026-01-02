@@ -79,6 +79,7 @@ class FestivalRaw(models.Model):
   # 데이터에서 제공하는 고유 아이디
   external_id = models.CharField(max_length=50)
 
+  main_title = models.CharField(max_length=300, null=True, blank=True)
   payload = models.JSONField(default=dict)  # 공공데이터 응답 item 그대로 저장
   payload_hash = models.CharField(max_length=64, null=True, blank=True)  # 데이터 중복 확인용 해시, sha256 hex
 
@@ -111,33 +112,35 @@ class FestivalRaw(models.Model):
     ]
 
   def __str__(self) -> str:
-    return f"{self.external_id}"
+    return f"{self.main_title}"
 
 
 
 # 축제 데이터 운영용
 class Festival(models.Model):
   class DatePrecision(models.TextChoices):
-    EXACT = "EXACT", "특정일"
-    RANGE = "RANGE", "시작, 끝 날짜"
-    RANGE_MONTH = "RANGE_MONTH", "월 범위"
-    RANGE_YEAR = "RANGE_YEAR", "연 범위"
-    TBD = "TBD", "추후 공지"
-    ALWAYS = "ALWAYS", "상시"
-    UNKNOWN = "UNKNOWN", "알 수 없음"
+    EXACT = "EXACT", "EXACT" # 특정일
+    RANGE = "RANGE", "RANGE" # 시작, 끝 날짜
+    RANGE_MONTH = "RANGE_MONTH", "RANGE_MONTH" # 월 범위
+    RANGE_YEAR = "RANGE_YEAR", "RANGE_YEAR" # 연 범위
+    TBD = "TBD", "TBD" # 추후 공지
+    ALWAYS = "ALWAYS", "ALWAYS" # 상시
+    UNKNOWN = "UNKNOWN", "UNKNOWN" # 알 수 없음
 
   external_source = models.CharField(max_length=50, default="PUBLIC_API")
   external_id = models.CharField(max_length=50)
 
   # 공공데이터 필드
-  main_title = models.CharField(max_length=300, null=True, blank=True)
+  main_title_raw = models.CharField(max_length=300, null=True, blank=True)
+  main_title_display = models.CharField(max_length=300, null=True, blank=True)
   gugun_nm = models.CharField(max_length=100, null=True, blank=True)
   lat = models.DecimalField(max_digits=12, decimal_places=6, null=True, blank=True)
   lng = models.DecimalField(max_digits=12, decimal_places=6, null=True, blank=True)
-  place = models.CharField(max_length=300, null=True, blank=True)
+  place_raw = models.CharField(max_length=300, null=True, blank=True)
+  place_display = models.CharField(max_length=300, null=True, blank=True)
   title = models.CharField(max_length=300, null=True, blank=True)
   subtitle = models.CharField(max_length=300, null=True, blank=True)
-  main_place = models.CharField(max_length=100, null=True, blank=True)
+  main_place_raw = models.CharField(max_length=100, null=True, blank=True)
   addr1 = models.CharField(max_length=200, null=True, blank=True)
   addr2 = models.CharField(max_length=200, null=True, blank=True)
   cntct_tel = models.CharField(max_length=200, null=True, blank=True)
@@ -148,7 +151,7 @@ class Festival(models.Model):
   usage_amount = models.CharField(max_length=500, null=True, blank=True)
   main_img_normal = models.CharField(max_length=500, null=True, blank=True)
   main_img_thumb = models.CharField(max_length=500, null=True, blank=True)
-  item_contents = models.TextField(null=True, blank=True)
+  item_contents = models.TextField(null=False, blank=False)
   middle_size_rm1 = models.CharField(max_length=500, null=True, blank=True)
 
   payload_hash = models.CharField(max_length=64, null=True, blank=True, db_index=True)
@@ -199,4 +202,4 @@ class Festival(models.Model):
     ]
 
   def __str__(self) -> str:
-    return f"Festival {self.external_id}"
+    return f"{self.main_title_display}"
