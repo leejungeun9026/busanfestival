@@ -39,6 +39,7 @@ urlpatterns = [
 	path("admin/", custom_admin_site.urls),
     path("api/", include("rest_framework.urls")),
     path("api/", include("example.urls")),
+    path("api/", include("festival.urls")),
 ]
 
 # Swagger / Redoc

@@ -165,7 +165,7 @@ class FestivalAdmin(admin.ModelAdmin):
     "date_precision",
     "start_date",
     "end_date",
-    "time_info_raw",
+    "extra_schedule_note",
     "is_visible",
     "is_deleted",
     "updated_at",
@@ -207,7 +207,7 @@ class FestivalAdmin(admin.ModelAdmin):
     ("필드 수정", {"fields": ("main_title_display", "title", "subtitle", "gugun_nm", "place_display", "usage_amount")}),
     ("주소/연락/링크 수정", {"fields": ("addr1", "addr2", "cntct_tel", "homepage_url")}),
     ("좌표/교통", {"fields": ("lat", "lng", "trfc_info")}),
-    ("일정 수정", {"fields": ("start_date", "end_date", "date_precision", "time_info_raw", "extra_schedule_note")}),
+    ("일정 수정", {"fields": ("start_date", "end_date", "date_precision", "extra_schedule_note")}),
     ("이미지/설명", {"fields": ("main_img_thumb_preview", "main_img_normal", "main_img_thumb", "item_contents", "middle_size_rm1")}),
     ("메타", {"fields": ("created_at", "updated_at", "updated_by", "edited_fields")}),
   )

@@ -76,7 +76,7 @@ def _map_payload_to_festival_fields(
 		"end_date": sch.end_date,
 		"date_precision": sch.date_precision,
 		"extra_schedule_note": sch.extra_schedule_note,  # TextField라 None OK
-		"time_info_raw": sch.time_info_raw,
+		"note_months": sch.note_months
 	}
 
 	# 정규화시킨 title, place

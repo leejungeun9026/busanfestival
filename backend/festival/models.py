@@ -151,21 +151,22 @@ class Festival(models.Model):
   usage_amount = models.CharField(max_length=500, null=True, blank=True)
   main_img_normal = models.CharField(max_length=500, null=True, blank=True)
   main_img_thumb = models.CharField(max_length=500, null=True, blank=True)
-  item_contents = models.TextField(null=False, blank=False)
+  item_contents = models.TextField(null=True, blank=True)
   middle_size_rm1 = models.CharField(max_length=500, null=True, blank=True)
 
   payload_hash = models.CharField(max_length=64, null=True, blank=True, db_index=True)
 
   # 운영에서 정규화 시킬 일정 필드
-  start_date = models.DateField(null=True, blank=True)
-  end_date = models.DateField(null=True, blank=True)
   date_precision = models.CharField(
     max_length=20,
     choices=DatePrecision.choices,
     default=DatePrecision.UNKNOWN
   )
-  extra_schedule_note = models.TextField(null=True, blank=True)
-  time_info_raw = models.CharField(max_length=500, null=True, blank=True)
+  start_date = models.DateField(null=True, blank=True) # 시작일
+  end_date = models.DateField(null=True, blank=True)  # 종료일
+  extra_schedule_note = models.TextField(null=True, blank=True) # 비고
+  note_months = models.JSONField(default=list, blank=True)
+ # 월 정규화(검색용)
 
   # 운영 관리용 필드
   is_visible = models.BooleanField(default=True)
