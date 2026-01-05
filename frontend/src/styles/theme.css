@@ -1,7 +1,42 @@
+@import "tailwindcss";
+
 :root{
-  --c-primary:#024873;
-  --c-accent:#639CBF;
-  --c-surface:#93AEBF;
-  --c-text:#26170F;
-  --c-bg:#D9D9D9;
+  /* Brand (Statista reference) */
+  --brand-ink: #000813;
+  --brand-primary: #0766E6;
+  --brand-soft: #B8CDEA;
+
+  /* Neutral */
+  --neutral-0: #FFFFFF;
+  --neutral-25: #F7F9FC;
+  --neutral-50: #EEF2F7;
+  --neutral-200: #D7DEE8;
+  --neutral-700: #334155;
+  --neutral-900: #0B1220;
+
+  /* Interaction */
+  --action-primary-hover: #0557C6;
+
+  /* Backward-compatible aliases (기존 코드의 --c-* 유지) */
+  --c-primary: var(--brand-ink);        /* Navbar/헤더 배경 */
+  --c-accent: var(--brand-primary);     /* CTA/링크 */
+  --c-soft: var(--brand-soft);          /* 선택/강조 배경 */
+  --c-bg: var(--neutral-25);            /* 페이지 캔버스 */
+  --c-surface: var(--neutral-0);        /* 카드/패널 */
+  --c-subtle: var(--neutral-50);        /* 섹션/placeholder */
+  --c-border: var(--neutral-200);       /* 보더/디바이더 */
+  --c-muted: var(--neutral-700);        /* 보조 텍스트 */
+  --c-text: var(--neutral-900);         /* 기본 텍스트 */
+  --c-hover: var(--action-primary-hover);
+}
+
+/* 프로젝트환경문서 기준 breakpoint (Tailwind v4 @theme) */
+@theme {
+  --breakpoint-xs: 30rem;   /* 480px */
+  --breakpoint-sm: 40rem;   /* 640px */
+  --breakpoint-md: 48rem;   /* 768px */
+  --breakpoint-lg: 64rem;   /* 1024px */
+  --breakpoint-xl: 80rem;   /* 1280px */
+  --breakpoint-2xl: 96rem;  /* 1536px */
+  --breakpoint-3xl: 120rem; /* 1920px */
 }
