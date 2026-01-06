@@ -2,31 +2,27 @@ import { useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 export type NavbarSearchParams = {
-  period: string; // 시기
-  region: string; // 지역
+  period: string;  // 시기
+  region: string;  // 지역
   keyword: string; // 검색어
 };
 
-type NavbarProps = {
+type HeaderProps = {
   onSearch?: (params: NavbarSearchParams) => void;
+  defaultValues?: Partial<NavbarSearchParams>;
 };
 
-export default function Navbar({ onSearch }: NavbarProps) {
+export default function Header({ onSearch, defaultValues }: HeaderProps) {
   const navigate = useNavigate();
   const formRef = useRef<HTMLFormElement | null>(null);
 
   const fieldClass = useMemo(
-    () =>
-      [
-        "h-9 w-full rounded-md px-3 text-sm outline-none",
-        "border",
-      ].join(" "),
+    () => ["h-9 w-full rounded-md px-3 text-sm outline-none", "border"].join(" "),
     []
   );
 
   const buttonClass = useMemo(
-    () =>
-      "h-9 rounded-md px-3 text-sm font-semibold whitespace-nowrap",
+    () => "h-9 rounded-md px-3 text-sm font-semibold whitespace-nowrap",
     []
   );
 
@@ -40,9 +36,8 @@ export default function Navbar({ onSearch }: NavbarProps) {
       }}
     >
       <div className="mx-auto max-w-6xl px-4 py-3 xl:max-w-7xl 2xl:max-w-[90rem]">
-        {/* 모바일: 2줄(브랜드/액션) + (검색폼) / 데스크탑: 1줄 */}
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
-          {/* Brand */}
+          {/* Brand: 텍스트 클릭 시 main 이동 (v0.3) */}
           <div className="flex items-center justify-between gap-3">
             <button
               type="button"
@@ -52,8 +47,6 @@ export default function Navbar({ onSearch }: NavbarProps) {
             >
               BusanFestival
             </button>
-
-            {/* (필요 시) 우측에 최소 액션 배치 가능 */}
           </div>
 
           {/* Search Form (v0.3: 시기/지역/검색어 + 초기화 + 검색) */}
@@ -73,7 +66,6 @@ export default function Navbar({ onSearch }: NavbarProps) {
               onSearch?.(params);
             }}
           >
-            {/* 시기 */}
             <select
               name="period"
               className={fieldClass}
@@ -82,7 +74,7 @@ export default function Navbar({ onSearch }: NavbarProps) {
                 color: "var(--c-text)",
                 borderColor: "var(--c-border)",
               }}
-              defaultValue=""
+              defaultValue={defaultValues?.period ?? ""}
             >
               <option value="" disabled>
                 시기
@@ -92,7 +84,6 @@ export default function Navbar({ onSearch }: NavbarProps) {
               <option value="next_month">다음 달</option>
             </select>
 
-            {/* 지역 */}
             <select
               name="region"
               className={fieldClass}
@@ -101,7 +92,7 @@ export default function Navbar({ onSearch }: NavbarProps) {
                 color: "var(--c-text)",
                 borderColor: "var(--c-border)",
               }}
-              defaultValue=""
+              defaultValue={defaultValues?.region ?? ""}
             >
               <option value="" disabled>
                 지역
@@ -110,7 +101,6 @@ export default function Navbar({ onSearch }: NavbarProps) {
               <option value="busan">부산</option>
             </select>
 
-            {/* 검색어 */}
             <input
               name="keyword"
               placeholder="검색어"
@@ -120,27 +110,25 @@ export default function Navbar({ onSearch }: NavbarProps) {
                 color: "var(--c-text)",
                 borderColor: "var(--c-border)",
               }}
+              defaultValue={defaultValues?.keyword ?? ""}
             />
 
-            {/* 초기화 */}
             <button
               type="button"
               className={buttonClass}
               style={{
-                backgroundColor: "rgba(184,205,234,0.18)", // soft (알파)
+                backgroundColor: "rgba(184,205,234,0.18)",
                 color: "var(--neutral-0)",
                 border: "1px solid rgba(255,255,255,0.14)",
               }}
               onClick={() => {
                 formRef.current?.reset();
-                // 초기화 시에도 main-bottom 리스트 갱신이 필요하면 빈 조건으로 호출
                 onSearch?.({ period: "", region: "", keyword: "" });
               }}
             >
               초기화
             </button>
 
-            {/* 검색 */}
             <button
               type="submit"
               className={buttonClass}

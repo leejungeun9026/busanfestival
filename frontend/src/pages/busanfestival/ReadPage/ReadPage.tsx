@@ -1,4 +1,5 @@
-import Navbar from "../components/Navbar";
+import { useNavigate } from "react-router-dom";
+import Header, { type NavbarSearchParams } from "../../../components/layout/Header/Header";
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
@@ -23,9 +24,16 @@ function Panel({ children }: { children: React.ReactNode }) {
 }
 
 export default function ReadPage() {
+  const navigate = useNavigate();
+
   return (
     <div className="min-h-dvh" style={{ backgroundColor: "var(--c-bg)" }}>
-      <Navbar />
+      <Header
+        onSearch={(params: NavbarSearchParams) => {
+          // 문서 전제: Read에서 검색하면 main으로 이동 + 조건 전달
+          navigate("/busanfestival/main", { state: { searchParams: params } });
+        }}
+      />
 
       <main className="mx-auto max-w-6xl px-4 py-4 space-y-4 xl:max-w-7xl 2xl:max-w-[90rem]">
         {/* Festival Info */}
@@ -83,7 +91,7 @@ export default function ReadPage() {
                 border: "1px solid var(--c-border)",
               }}
             >
-              {/* 길찾기/지도가 구현될 예정 */}
+              {/* 문서 전제: 길찾기 지도는 현재 영역만 */}
             </div>
           </Panel>
         </section>

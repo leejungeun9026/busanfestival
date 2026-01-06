@@ -28,6 +28,10 @@
   --c-muted: var(--neutral-700);        /* 보조 텍스트 */
   --c-text: var(--neutral-900);         /* 기본 텍스트 */
   --c-hover: var(--action-primary-hover);
+
+  /* Overlay (Tooltip 등) */
+  --overlay-shadow: 0 10px 30px rgba(0, 8, 19, 0.18);
+  --overlay-z: 50;
 }
 
 /* 프로젝트환경문서 기준 breakpoint (Tailwind v4 @theme) */

@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom"
-import MainPage from "./pages/MainPage"
-import ReadPage from "./pages/ReadPage"
+import MainPage from "../pages/busanfestival/Mainpage/MainPage"
+import ReadPage from "../pages/busanfestival/ReadPage/ReadPage"
 
 function App() {
   return (
