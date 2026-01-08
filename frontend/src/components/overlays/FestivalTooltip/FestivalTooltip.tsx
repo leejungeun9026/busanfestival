@@ -19,17 +19,28 @@ function computePosition(anchorRect: DOMRect) {
   const width = 280;
   const heightGuess = 160;
 
-  const desiredLeft = anchorRect.right + gap;
-  const desiredTop = anchorRect.top - 6;
-
   const vw = window.innerWidth;
   const vh = window.innerHeight;
 
+  const XL = 1280; // --breakpoint-xl (1280px)
+
+  // 기본: xl 이상은 "현재 위치" 유지 (라벨 기준 우측)
+  let desiredLeft = anchorRect.right + gap;
+  let desiredTop = anchorRect.top - 6;
+
+  // xl 미만(<=1279): 라벨 기준 "좌측 상단"으로 이동
+  if (vw < XL) {
+    desiredLeft = anchorRect.left - gap - width;         // 라벨 왼쪽으로
+    desiredTop = anchorRect.top - gap - heightGuess + 70;     // 라벨 위쪽으로
+  }
+
+  // viewport 밖으로 나가지 않도록 클램프
   const left = Math.min(Math.max(12, desiredLeft), Math.max(12, vw - width - 12));
   const top = Math.min(Math.max(12, desiredTop), Math.max(12, vh - heightGuess - 12));
 
   return { top, left, width };
 }
+
 
 export default function FestivalTooltip({
   festival,
