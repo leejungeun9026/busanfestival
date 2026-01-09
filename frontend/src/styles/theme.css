@@ -18,15 +18,15 @@
   --action-primary-hover: #0557C6;
 
   /* Backward-compatible aliases (기존 코드의 --c-* 유지) */
-  --c-primary: var(--brand-ink);        /* Navbar/헤더 배경 */
-  --c-accent: var(--brand-primary);     /* CTA/링크 */
-  --c-soft: var(--brand-soft);          /* 선택/강조 배경 */
-  --c-bg: var(--neutral-25);            /* 페이지 캔버스 */
-  --c-surface: var(--neutral-0);        /* 카드/패널 */
-  --c-subtle: var(--neutral-50);        /* 섹션/placeholder */
-  --c-border: var(--neutral-200);       /* 보더/디바이더 */
-  --c-muted: var(--neutral-700);        /* 보조 텍스트 */
-  --c-text: var(--neutral-900);         /* 기본 텍스트 */
+  --c-primary: var(--brand-ink);        /*Navbar/헤더 배경*/
+  --c-accent: var(--brand-primary);     /*CTA/링크*/
+  --c-soft: var(--brand-soft);          /*선택/강조 배경*/
+  --c-bg: var(--neutral-25);            /*페이지 캔버스*/
+  --c-surface: var(--neutral-0);        /*카드/패널*/
+  --c-subtle: var(--neutral-50);        /*섹션/placeholder*/
+  --c-border: var(--neutral-200);       /*보더/디바이더*/
+  --c-muted: var(--neutral-700);        /*보조 텍스트*/
+  --c-text: var(--neutral-900);         /*기본 텍스트*/
   --c-hover: var(--action-primary-hover);
 
   /* Overlay (Tooltip 등) */
