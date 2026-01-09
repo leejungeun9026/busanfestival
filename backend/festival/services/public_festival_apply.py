@@ -69,7 +69,7 @@ def _map_payload_to_festival_fields(
 		"main_img_normal": _safe_str(payload.get("MAIN_IMG_NORMAL")),
 		"main_img_thumb": _safe_str(payload.get("MAIN_IMG_THUMB")),
 		"item_contents": _safe_str(payload.get("ITEMCNTNTS")),
-		"middle_size_rm1": _safe_str(payload.get("MIDDLE_SIZE_RM1")),
+		"facilities": _safe_str(payload.get("MIDDLE_SIZE_RM1")),
 
 		# 정규화 시킨 축제일정 필드
 		"start_date": sch.start_date,
@@ -167,12 +167,12 @@ def run_public_festival_apply(
 				if force:
     			# force면 보호필드의 운영자 수정 흔적 제거 (시스템 관리로 전환)
 					if festival.edited_fields:
-							festival.edited_fields = [f for f in festival.edited_fields if f not in PROTECTED_FIELDS]
+						festival.edited_fields = [f for f in festival.edited_fields if f not in PROTECTED_FIELDS]
 				else:
 						# 운영자가 수정한 보호필드는 덮어쓰지 않음 (필드 단위)
 					for f in PROTECTED_FIELDS:
-							if f in edited:
-									fields.pop(f, None)
+						if f in edited:
+							fields.pop(f, None)
 
 				for k, v in fields.items():
 					setattr(festival, k, v)

@@ -152,7 +152,7 @@ class Festival(models.Model):
   main_img_normal = models.CharField(max_length=500, null=True, blank=True)
   main_img_thumb = models.CharField(max_length=500, null=True, blank=True)
   item_contents = models.TextField(null=True, blank=True)
-  middle_size_rm1 = models.CharField(max_length=500, null=True, blank=True)
+  facilities = models.CharField(max_length=500, null=True, blank=True)
 
   payload_hash = models.CharField(max_length=64, null=True, blank=True, db_index=True)
 
@@ -184,6 +184,7 @@ class Festival(models.Model):
   created_at = models.DateTimeField(auto_now_add=True)
   updated_at = models.DateTimeField(auto_now=True)
   updated_by = models.CharField(max_length=100, null=True, blank=True)
+  view_count = models.PositiveIntegerField(default=0)
 
   class Meta:
     db_table = "festival"

@@ -25,7 +25,8 @@ class FestivalListSerializer(serializers.ModelSerializer):
       "extra_schedule_note",
       "usage_amount",
       "main_img_thumb",
-      "middle_size_rm1"      
+      "facilities",
+      "view_count"
     ]
 
 # 상세보기 전용
@@ -53,5 +54,6 @@ class FestivalDetailSerializer(serializers.ModelSerializer):
       "usage_amount",
       "main_img_normal",
       "item_contents",
-      "middle_size_rm1"      
+      "facilities",
+      "view_count"
     ]

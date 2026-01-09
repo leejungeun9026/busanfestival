@@ -1,8 +1,10 @@
 from __future__ import annotations
 from django.apps import apps
-from django.contrib import admin
+from django.contrib import admin, messages
+from django.core.management import call_command
 from django.db import models
-from django.urls import reverse
+from django.shortcuts import redirect
+from django.urls import path, reverse
 from django.utils import timezone
 from django.utils.html import format_html
 
@@ -89,7 +91,54 @@ class FestivalSyncLogAdmin(admin.ModelAdmin):
     return False
   def has_delete_permission(self, request, obj=None):
     return False
+  
+  # custom url 추가
+  # /admin/festival/festivalsynclog/sync/
+  # /admin/festival/festivalsynclog/apply/
+  def get_urls(self) :
+    urls = super().get_urls()
+    custom_urls = [
+      path(
+        "sync/", 
+        self.admin_site.admin_view(self.sync_view),
+        name="festival_synclog_sync",
+      ),
+      path(
+        "apply/",
+        self.admin_site.admin_view(self.apply_view),
+        name="festival_synclog_apply",
+      ),
+    ]
+    return custom_urls + urls
 
+  # sync(공공데이터 수집) 버튼 구현
+  def sync_view(self, request) :
+    try:
+      call_command("sync_public_festivals")
+      messages.success(request, "sync_public_festivals 실행")
+    except Exception as e :
+      messages.error(request, f"Sync 실행 실패: {e}")
+    return redirect("..")
+
+  # apply(동기화) 버튼 구현
+  def apply_view(self, request) :
+    sync_log = (
+      FestivalSyncLog.objects
+      .filter(status=FestivalSyncLog.Status.SUCCESS)
+      .order_by("-finished_at")
+      .first()
+    )
+    if not sync_log:
+      messages.error(request, "적용할 SUCCESS SyncLog가 없습니다.")
+      return redirect("..")
+    
+    try:
+      call_command("apply_public_festivals", sync_log_id=sync_log.id)
+      messages.success(request, "apply_public_festivals 실행")
+    except Exception as e :
+      messages.error(request, f"Apply 실행 실패: {e}")
+
+    return redirect("..")
 
 
 # FestivalSyncLog테이블 Read-only 설정
@@ -166,6 +215,7 @@ class FestivalAdmin(admin.ModelAdmin):
     "start_date",
     "end_date",
     "extra_schedule_note",
+    "view_count",
     "is_visible",
     "is_deleted",
     "updated_at",
@@ -204,11 +254,11 @@ class FestivalAdmin(admin.ModelAdmin):
     ("API 및 동기화 정보", {"fields": ("external_source", "external_id", "payload_hash", "last_synced_sync")}),
     ("노출/삭제", {"fields": ("is_visible", "is_deleted")}),
     ("원문 정보", {"fields": ("main_title_raw", "place_raw", "main_place_raw", "usage_day", "usage_day_week_and_time",)}),
-    ("필드 수정", {"fields": ("main_title_display", "title", "subtitle", "gugun_nm", "place_display", "usage_amount")}),
+    ("이미지", {"fields": ("main_img_thumb_preview", "main_img_normal", "main_img_thumb")}),
+    ("필드 수정", {"fields": ("main_title_display", "title", "subtitle", "gugun_nm", "place_display","item_contents", "usage_amount","facilities", "view_count")}),
     ("주소/연락/링크 수정", {"fields": ("addr1", "addr2", "cntct_tel", "homepage_url")}),
     ("좌표/교통", {"fields": ("lat", "lng", "trfc_info")}),
     ("일정 수정", {"fields": ("start_date", "end_date", "date_precision", "extra_schedule_note")}),
-    ("이미지/설명", {"fields": ("main_img_thumb_preview", "main_img_normal", "main_img_thumb", "item_contents", "middle_size_rm1")}),
     ("메타", {"fields": ("created_at", "updated_at", "updated_by", "edited_fields")}),
   )
 
