@@ -206,13 +206,21 @@ export default function MainPage() {
 
   return (
     <div className="min-h-dvh" style={{ backgroundColor: "var(--c-bg)" }}>
-      <Header
-        defaultValues={searchParams}
-        onSearch={(params) => {
-          // 문서 전제: 검색 시 main-bottom 리스트 갱신
-          setSearchParams(params);
+      <div
+        className="sticky top-0 z-50"
+        style={{
+          backgroundColor: "var(--c-bg)",
+          borderBottom: "1px solid var(--c-border)",
         }}
-      />
+      >
+        <Header
+          defaultValues={searchParams}
+          onSearch={(params) => {
+            // 문서 전제: 검색 시 main-bottom 리스트 갱신
+            setSearchParams(params);
+          }}
+        />
+      </div>
 
       <main className="mx-auto max-w-6xl px-4 py-4 xl:max-w-7xl 2xl:max-w-[90rem]">
         {/* Chart (10.1) */}

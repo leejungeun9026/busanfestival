@@ -45,7 +45,7 @@ const MOCK_FESTIVAL_DETAILS: Record<string, FestivalDetail> = {
     images: [
       "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1200&q=60",
       "https://images.unsplash.com/photo-1496307042754-b4aa456c4a2d?auto=format&fit=crop&w=1200&q=60",
-      "https://images.unsplash.com/photo-1520975958225-62e8794f18e2?auto=format&fit=crop&w=1200&q=60",
+      "https://www.visitbusan.net/uploadImgs/files/cntnts/20250520203304478_thumbL",
       "https://images.unsplash.com/photo-1520975965870-35d9f4b5b5bd?auto=format&fit=crop&w=1200&q=60",
       "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=1200&q=60",
       "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1200&q=60",
@@ -99,12 +99,20 @@ export default function ReadPage() {
 
   return (
     <div className="min-h-dvh" style={{ backgroundColor: "var(--c-bg)" }}>
-      <Header
-        onSearch={(params: NavbarSearchParams) => {
-          // 문서 전제: Read에서 검색하면 main으로 이동 + 조건 전달
-          navigate("/busanfestival/main", { state: { searchParams: params } });
+      <div
+        className="sticky top-0 z-50"
+        style={{
+          backgroundColor: "var(--c-bg)",
+          borderBottom: "1px solid var(--c-border)",
         }}
-      />
+      >
+        <Header
+          onSearch={(params: NavbarSearchParams) => {
+            // 문서 전제: Read에서 검색하면 main으로 이동 + 조건 전달
+            navigate("/busanfestival/main", { state: { searchParams: params } });
+          }}
+        />
+      </div>
 
       <main className="mx-auto max-w-6xl px-4 py-4 space-y-6 xl:max-w-7xl 2xl:max-w-[90rem]">
         <InfoSection detail={detail} />

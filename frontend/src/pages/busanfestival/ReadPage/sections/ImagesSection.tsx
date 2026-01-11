@@ -145,8 +145,13 @@ export default function ImagesSection({
 
   // Indicator: "뷰 단위" 개수 = maxIndex + 1 (이동도 1개씩이므로)
   const viewCount = Math.max(1, maxIndex + 1);
-  const thumbTranslatePct = (index / Math.max(1, viewCount)) * 100;
+  // thumb 폭(부모 바 기준 %) — 기존과 동일(한 칸 단위)
   const thumbWidthPct = 100 / viewCount;
+  // left는 "부모 바 기준 %"로 계산해야 끝까지 도달함
+  // - viewCount=1이면 분모 0 방지
+  const denom = Math.max(1, viewCount - 1);
+  // left는 0% ~ (100 - thumbWidthPct)% 범위에서 이동
+  const thumbLeftPct = (index / denom) * (100 - thumbWidthPct);
 
   return (
     <section>
@@ -222,12 +227,12 @@ export default function ImagesSection({
           >
             {/* thumb */}
             <div
-              className="absolute left-0 top-0 h-full rounded-full"
+              className="absolute top-0 h-full rounded-full"
               style={{
+                left: `${thumbLeftPct}%`,
                 width: `${thumbWidthPct}%`,
-                transform: `translateX(${thumbTranslatePct}%)`,
                 backgroundColor: "var(--c-accent)",
-                transition: "transform 320ms ease-out",
+                transition: "left 320ms ease-out",
               }}
             />
           </div>
